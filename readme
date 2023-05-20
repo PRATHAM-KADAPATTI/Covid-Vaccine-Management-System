@@ -1,0 +1,196 @@
+http://localhost/cvmsv1/mainPage.html
+
+<!-- <?php   
+
+require_once "main.php";
+
+$username = $password = $confirm_password = "";
+$username_err = $password_err = $confirm_password_err = "";
+
+if ($_SERVER['REQUEST_METHOD'] == "POST"){
+
+    if(empty(trim($_POST["username"]))){
+        $username_err = "username can not be blank";
+    }
+    else{
+        $sql = "SELECT * FROM register WHERE username = ?";
+        $stmt = mysqli_prepare($conn, $sql);
+        if($stmt)                        00000000000
+        {
+            mysqli_stmt_bind_param($stmt, "s", $param_PhoneNo);    000000000
+            $param_PhoneNo = trim($_POST['PhoneNo']);     000000000000
+
+            if(mysqli_stmt_execute($stmt)){     000000000000
+                mysqli_stmt_store_result($stmt);     000000000000
+                if(mysqli_stmt_num_rows($stmt) == 1){     000000000000
+                    $phoneno_err = "This phone number is already present";     000000000000
+                }     000000000000
+                else{     000000000000
+                    $phoneno = trim($_POST['PhoneNo']);     000000000000
+                }     000000000000
+            }
+            else{     000000000000
+                echo "Something went wrong";     000000000000
+            }     000000000000
+        }     000000000000
+    }
+    
+    mysqli_stmt_close($stmt);
+    
+    check for password      000000000000
+    
+    if(empty(trim($_POST['Password']))){
+        $password_err = "password cannot be blank";
+    }
+    elseif(strlen(trim($_POST['Password'])) < 3){
+        $password_err = "password cannot be less than 3 charecter";
+    }
+    else{
+        $password = trim($_POST['Password']);
+    }
+    
+    check for confirm password     000000000000
+    
+    if(trim($_POST['Password']) != trim($_POST['confirmPassword'])){
+        $password_err = "Passwords should match";
+    }
+    
+    if there where no errors then go and insert into an database     000000000000
+    $name = $_POST['name'];
+    $dob = $_POST['dob'];
+    $gender = $_POST['gender'];
+    $username = $_POST['username'];
+    $AdharNo = $_POST['AdharNo'];
+    $State = $_POST['State'];
+    $District = $_POST['District'];
+    $District = $_POST['District'];
+    $confirm_password = $_POST['confirmPassword'];
+
+
+
+
+    if(empty($phoneno_err) && empty($password_err) && empty($confirm_password_err))
+    {
+        $sql = "INSERT INTO register (name,dob,gender,username,AdharNo,State,District, Password,confirmPassword)VALUES(?,?,?,?,?,?,?,?,?)";
+        $stmt = mysqli_prepare($conn, $sql);
+        if($stmt)
+        {
+            mysqli_stmt_bind_param($stmt, "sssssssss", $name,$dob,$gender,$username,$AdharNo,$State,$District, $password,$confirm_password);
+            
+            set the parameters     000000000000
+            $param_PhoneNo = $phoneno;     000000000000
+            $param_password = $password;     000000000000
+            
+            _hash($password,PASSWORD_DEFAULT);     000000000000
+            
+            Try to execute the query     000000000000
+
+
+            if(mysqli_stmt_execute($stmt))
+            {
+                header("location: index.php");
+            }
+            else{
+                echo "Something went wrong , can not redirect";
+            }
+            
+        }
+        
+        mysqli_stmt_close($stmt);
+    }
+    mysqli_close($conn);
+}
+    ?> -->
+
+
+---------------------------------------------------------------------------------------
+index
+
+<?php
+
+session_start();
+
+if(isset($_SESSION['PhoneNo']))
+{
+    header("location: dose.php");
+    exit;
+}
+require_once "main.php";
+
+$phoneno = $password1 = "";
+$err = "";
+
+if($_SERVER['REQUEST_METHOD'] == "POST"){
+    if(empty(trim($_POST['PhoneNo'])) || empty(trim($_POST['password1'])))
+    {
+        $err = "Please enter username and password";
+    }
+    else{
+        $phoneno = trim($_POST['PhoneNo']);
+        $password1 = trim($_POST['password1']);
+    }
+    $sql = "SELECT PhoneNo,password FROM register WHERE PhoneNo = ?";
+    $stmt = mysqli_prepare($conn,$sql);
+    if(isset($_SESSION['password']))
+{
+    header("location: dose.php");
+    exit;
+}
+    if(mysqli_stmt_num_rows($stmt) == 1)
+            {
+                mysqli_stmt_bind_result($stmt,$phoneno,$password);  //0000000000000
+                
+                if(mysqli_stmt_fetch($stmt))
+                {
+                    if(password_verify($password1,$password))
+                    {
+                        //this means the password is correct.allow usr to login
+                        session_start();
+                        $_SESSION["phoneno"] =  $phoneno;
+                        $_SESSION["loggedin"] = true;
+
+                        //redirect user to dose page
+                        header("location: dose.php");
+
+                    }
+                }
+            }
+
+    // if(empty($err))
+    // {
+    //     $sql = "SELECT PhoneNo,password FROM register WHERE PhoneNo = ?";
+    //     $stmt = mysqli_prepare($conn,$sql);
+    //     mysqli_stmt_bind_param($stmt, "s", $param_phoneno);
+    //     $param_phoneno = $phoneno;
+
+    //     if(mysqli_stmt_execute($stmt)){
+    //         mysqli_stmt_store_result($stmt);
+            
+    //     }
+    // }
+
+
+
+}
+
+
+?>
+
+
+
+----------------------------------------------------------------------------------------------------------------------------
+
+
+
+$ap = "SELECT * FROM login WHERE username = '$username'"
+    $result = mysqli_query($conn,$ap);
+
+    $productap = mysqli_fetch_assoc($result);
+
+    $usernameap = $productap['username'];
+
+    while($usernameap == 'username')
+    {
+        echo "<script>This user name is already taken.</script>";
+        username++;
+    }
